@@ -4,6 +4,8 @@
   import { cn } from "$lib/utils";
   import Footer from "./footer.svelte";
   import Header from "./header.svelte";
+  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+  import { goto } from "$app/navigation";
 
   let { children } = $props();
   let screenshotDiv: HTMLDivElement | undefined = $state();
@@ -14,6 +16,11 @@
     } else {
       commands.disableBlur();
     }
+  });
+  const appWebview = getCurrentWebviewWindow();
+  appWebview.listen<string>("navigate", (event) => {
+    const route = event.payload;
+    goto(route);
   });
 </script>
 
